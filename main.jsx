@@ -1,4 +1,38 @@
 import './index.css';
+
+// PDF save helper with error handling and print fallback
+function savePDF(fname, btnEl) {
+  const el = document.getElementById("report-content");
+  if (!el) { alert("Report content not found. Please try again."); return; }
+  if (btnEl) { btnEl.textContent = "Generating PDF..."; btnEl.disabled = true; }
+  const opt = { margin: 10, filename: fname, image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, logging: false, windowWidth: 1200 }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } };
+  const run = () => {
+    try {
+      window.html2pdf().set(opt).from(el).save().then(() => {
+        if (btnEl) { btnEl.textContent = "\u2713 PDF Saved!"; setTimeout(() => { btnEl.textContent = "Save PDF"; btnEl.disabled = false; }, 3000); }
+      }).catch((err) => {
+        console.error("html2pdf error:", err);
+        if (btnEl) { btnEl.textContent = "Save PDF"; btnEl.disabled = false; }
+        if (confirm("PDF generation had an issue. Would you like to use your browser's Print to PDF instead?")) { window.print(); }
+      });
+    } catch(err) {
+      console.error("html2pdf exception:", err);
+      if (btnEl) { btnEl.textContent = "Save PDF"; btnEl.disabled = false; }
+      if (confirm("PDF generation failed. Would you like to use your browser's Print to PDF instead?")) { window.print(); }
+    }
+  };
+  if (window.html2pdf) { run(); }
+  else {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    s.onload = run;
+    s.onerror = () => {
+      if (btnEl) { btnEl.textContent = "Save PDF"; btnEl.disabled = false; }
+      if (confirm("Could not load PDF library. Would you like to use your browser's Print to PDF instead?")) { window.print(); }
+    };
+    document.head.appendChild(s);
+  }
+}
 import { useState, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { Plus, Minus, Mic, MicOff, ChevronRight, ChevronLeft, Star, Printer, Check, X, ArrowLeft, Image, AlertTriangle } from "lucide-react";
@@ -1576,16 +1610,13 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
         <div style={{ background: BRAND }} className="px-5 pt-12 pb-4 flex items-center gap-3 print-hide">
           <button onClick={onBack} className="text-white opacity-75 touch-manipulation"><ArrowLeft size={22} /></button>
           <h2 className="text-white text-xl font-bold flex-1">Report Preview</h2>
-          <button onClick={() => {
-            const el = document.getElementById("report-content");
-            const fname = inspection.address + " - " + inspection.inspectionType + ".pdf";
-            const opt = { margin: 10, filename: fname, image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } };
-            const run = () => window.html2pdf().set(opt).from(el).save();
-            if (window.html2pdf) { run(); }
-            else { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"; s.onload = run; document.head.appendChild(s); }
-          }} className="flex items-center gap-2 bg-white text-sm font-bold px-4 py-2 rounded-xl touch-manipulation" style={{ color: BRAND }}><Printer size={15} /> Save PDF</button>
+          <button onClick={(e) => {
+              const fname = inspection.address + " - " + inspection.inspectionType + ".pdf";
+              savePDF(fname, e.currentTarget);
+            }} className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-semibold" style={{background:BRAND}}>Save PDF</button>
         </div>
-        <div className="bg-white" id="report-content">
+        <style dangerouslySetInnerHTML={{__html: `@media print { .print-hide { display: none !important; } button { display: none !important; } header { display: none !important; } }`}} />
+          <div className="bg-white" id="report-content">
           <Cover />
           {/* Overall Summary */}
           <div className="px-8 py-8 border-b border-gray-200">
@@ -1765,14 +1796,10 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
       <div style={{ background: BRAND }} className="px-5 pt-12 pb-4 flex items-center gap-3 print-hide">
         <button onClick={onBack} className="text-white opacity-75 touch-manipulation"><ArrowLeft size={22} /></button>
         <h2 className="text-white text-xl font-bold flex-1">Report Preview</h2>
-          <button onClick={() => {
-            const el = document.getElementById("report-content");
-            const fname = inspection.address + " - " + inspection.inspectionType + ".pdf";
-            const opt = { margin: 10, filename: fname, image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } };
-            const run = () => window.html2pdf().set(opt).from(el).save();
-            if (window.html2pdf) { run(); }
-            else { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"; s.onload = run; document.head.appendChild(s); }
-          }} className="flex items-center gap-2 bg-white text-sm font-bold px-4 py-2 rounded-xl touch-manipulation" style={{ color: BRAND }}><Printer size={15} /> Save PDF</button>
+          <button onClick={(e) => {
+              const fname = inspection.address + " - " + inspection.inspectionType + ".pdf";
+              savePDF(fname, e.currentTarget);
+            }} className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-semibold" style={{background:BRAND}}>Save PDF</button>
       </div>
       <div className="bg-white">
         <Cover />
