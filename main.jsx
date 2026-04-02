@@ -2,7 +2,7 @@ import './index.css';
 
 // PDF save helper with error handling and print fallback
 function savePDF(fname, btnEl) {
-  const el = document.getElementById("report-content");
+  const el = document.getElementById("report-content") || document.querySelector("[data-report]") || document.querySelector(".bg-white");
   if (!el) { alert("Report content not found. Please try again."); return; }
   if (btnEl) { btnEl.textContent = "Generating PDF..."; btnEl.disabled = true; }
   const opt = { margin: 10, filename: fname, image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, logging: false, windowWidth: 1200 }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } };
@@ -1615,8 +1615,8 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
               savePDF(fname, e.currentTarget);
             }} className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-semibold" style={{background:BRAND}}>Save PDF</button>
         </div>
-        <style dangerouslySetInnerHTML={{__html: `@media print { .print-hide { display: none !important; } button { display: none !important; } header { display: none !important; } }`}} />
-          <div className="bg-white" id="report-content">
+        <style>{`@media print { button, .print-hide, header { display: none !important; } }`}</style>
+          <div className="bg-white" id="report-content" data-report="true">
           <Cover />
           {/* Overall Summary */}
           <div className="px-8 py-8 border-b border-gray-200">
