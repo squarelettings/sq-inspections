@@ -1,3 +1,4 @@
+import './index.css';
 import { useState, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { Plus, Minus, Mic, MicOff, ChevronRight, ChevronLeft, Star, Printer, Check, X, ArrowLeft, Image, AlertTriangle } from "lucide-react";
