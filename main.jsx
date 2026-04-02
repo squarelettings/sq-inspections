@@ -1551,7 +1551,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
     <div className="px-10 py-10 text-center border-b-4" style={{ borderColor: BRAND }}>
       <img src={`data:image/png;base64,${LOGO_B64}`} alt="Square Lettings" className="h-24 mx-auto mb-4 rounded-xl" />
       <p className="text-xs text-gray-400 mt-1">01224 600155 - info@squarelettings.co.uk</p>
-      <h1 className="text-2xl font-bold text-gray-800 mt-6 mb-1">Inventory & Schedule of Condition</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mt-6 mb-1" style={{wordSpacing:"0.15em", letterSpacing:"0.01em"}}>Inventory &amp; Schedule of Condition</h1>
       <p className="text-base text-gray-500 mb-6">{inspection.inspectionType}</p>
       <div className="max-w-xs mx-auto bg-gray-50 rounded-xl p-5 text-left space-y-3">
         {[["Address",`${inspection.address}${inspection.postcode ? ", "+inspection.postcode : ""}`],["Prepared for",inspection.landlord],["Inspected by",inspection.inspector],["Date",dateFormatted]].map(([label,val]) => (
@@ -1569,7 +1569,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
     const filled = items.filter(hasContent);
     if (filled.length === 0 && !notes && (!photos||photos.length===0)) return null;
     return (
-      <div className="px-8 py-8 border-b border-gray-200">
+      <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
         <SecHeader num={refNum} title={title} />
         {filled.length > 0 && (
           <table className="w-full text-sm border-collapse mb-4">
@@ -1613,13 +1613,13 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
           <button onClick={(e) => {
               const fname = inspection.address + " - " + inspection.inspectionType + ".pdf";
               savePDF(fname, e.currentTarget);
-            }} className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-semibold" style={{background:BRAND}}>Save PDF</button>
+            }} className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-semibold" style={{background:BRAND, pageBreakAfter:"avoid", pageBreakInside:"avoid"}}>Save PDF</button>
         </div>
-        <style>{`@media print { button, .print-hide, header { display: none !important; } }`}</style>
+        <style>{`@media print { button, .print-hide, header { display: none !important; } } .report-section { page-break-inside: avoid; break-inside: avoid; } table { page-break-inside: avoid; break-inside: avoid; } thead { display: table-header-group; } .section-header { page-break-after: avoid; break-after: avoid; }`}</style>
           <div className="bg-white" id="report-content" data-report="true">
           <Cover />
           {/* Overall Summary */}
-          <div className="px-8 py-8 border-b border-gray-200">
+          <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
             <SecHeader num="1" title="General Overview" />
             <table className="w-full text-sm border-collapse">
               <thead><tr style={{ background:`${BRAND}18` }}>{["Ref","Name","Answer","Comments"].map(h=><th key={h} className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>{h}</th>)}</tr></thead>
@@ -1654,7 +1654,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
           )}
           {/* Alarms */}
           {midData.alarms.length > 0 && (
-            <div className="px-8 py-8 border-b border-gray-200">
+            <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
               <SecHeader num="2" title="Alarms & Carbon Monoxide" />
               <table className="w-full text-sm border-collapse">
                 <thead><tr style={{ background:`${BRAND}18` }}>{["Ref","Type","Location","Test Result"].map(h=><th key={h} className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>{h}</th>)}</tr></thead>
@@ -1673,7 +1673,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
             </div>
           )}
           {/* Rooms */}
-          <div className="px-8 py-8 border-b border-gray-200">
+          <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
             <SecHeader num="3" title="Areas" />
             <table className="w-full text-sm border-collapse">
               <thead><tr style={{ background:`${BRAND}18` }}>{["Ref","Name","Condition","Comments"].map(h=><th key={h} className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>{h}</th>)}</tr></thead>
@@ -1689,7 +1689,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
             {(midData.roomPhotos||[]).length>0 && <div className="mt-5"><p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color:BRAND }}>Photos -- Areas</p><div className="grid grid-cols-4 gap-3">{midData.roomPhotos.map((p,i)=><div key={i} className="aspect-square rounded-xl overflow-hidden border border-gray-200"><img src={p} alt="" className="w-full h-full object-cover" /></div>)}</div></div>}
           </div>
           {/* Appliances */}
-          <div className="px-8 py-8 border-b border-gray-200">
+          <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
             <SecHeader num="4" title="Appliances" />
             <table className="w-full text-sm border-collapse">
               <thead><tr style={{ background:`${BRAND}18` }}>{["Ref","Name","Status","Comments"].map(h=><th key={h} className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>{h}</th>)}</tr></thead>
@@ -1710,7 +1710,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
           </div>
           {/* Follow-up */}
           {(midData.followUp || (midData.followUpPhotos||[]).length>0) && (
-            <div className="px-8 py-8 border-b border-gray-200">
+            <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
               <SecHeader num="5" title="Follow-up Required" />
               {midData.followUp && <p className="text-sm text-gray-700 leading-relaxed mb-4">{midData.followUp}</p>}
               {(midData.followUpPhotos||[]).length>0 && <div className="grid grid-cols-4 gap-3">{midData.followUpPhotos.map((p,i)=><div key={i} className="aspect-square rounded-xl overflow-hidden border border-gray-200"><img src={p} alt="" className="w-full h-full object-cover" /></div>)}</div>}
@@ -1724,7 +1724,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
             if (!hasObs) return null;
             const ODOUR_LABELS = { smoke:"Smoke / Cigarettes", cannabis:"Cannabis", pets:"Pets", damp:"Damp / Mould", stale:"Stale / Musty / Unventilated", cooking:"Strong Cooking Odours", other:"Other / Unidentified" };
             return (
-              <div className="px-8 py-8 border-b border-gray-200">
+              <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
                 <SecHeader num="6" title="General Observations" />
                 <table className="w-full text-sm border-collapse">
                   <thead><tr style={{ background:`${BRAND}18` }}><th className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>Observation</th><th className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>Detail</th></tr></thead>
@@ -1784,7 +1784,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
   let refN = 1;
   const sections = [];
   const pi = propInfo.items.filter(hasContent);
-  if (pi.length>0||propInfo.notes||(propInfo.photos||[]).length>0) sections.push({ key:"prop", title:"Property Information", items:propInfo.items, notes:propInfo.notes, photos:propInfo.photos });
+  .length>0) sections.push({ key:"prop", title:"Property Information", items:propInfo.items, notes:propInfo.notes, photos:propInfo.photos });
   rooms.forEach(r => sections.push({ key:r.id, title:r.name, items:r.items, notes:r.notes, photos:r.photos }));
   const ci = communal.items.filter(hasContent);
   if (ci.length>0||communal.notes||(communal.photos||[]).length>0) sections.push({ key:"comm", title:"Communal Areas & Building Exterior", items:communal.items, notes:communal.notes, photos:communal.photos });
@@ -1806,7 +1806,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
 
         {/* Alarms & Carbon Monoxide */}
         {!isMid && alarms && alarms.length > 0 && (
-          <div className="px-8 py-8 border-b border-gray-200">
+          <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
             <div className="text-white font-bold text-sm uppercase tracking-wider px-4 py-2.5 rounded-lg mb-5" style={{ background: BRAND }}>Alarms & Carbon Monoxide</div>
             <table className="w-full text-sm border-collapse">
               <thead><tr style={{ background:`${BRAND}18` }}>{["Type","Location","Test Result"].map(h=><th key={h} className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>{h}</th>)}</tr></thead>
@@ -1874,7 +1874,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
           );
         })}
         {hasCheckoutContent && (
-          <div className="px-8 py-8 border-b border-gray-200">
+          <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
             <SecHeader num={refN++} title="Condition Report & Recommendations" />
             <p className="text-xs text-gray-400 italic mb-5">Damage and recommendations recorded at check-out. Deposit deduction descriptions are for record purposes only -- no amounts are specified herein.</p>
             {(checkoutDamage.damageItems||[]).filter(i=>i.text&&i.text.trim()).length>0&&(
@@ -1896,7 +1896,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
           </div>
         )}
         {(generalComments.text||(generalComments.photos||[]).length>0)&&(
-          <div className="px-8 py-8 border-b border-gray-200">
+          <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
             <SecHeader num={refN++} title="General Comments" />
             {generalComments.text&&<p className="text-sm text-gray-700 leading-relaxed mb-5">{generalComments.text}</p>}
             {(generalComments.photos||[]).length>0&&<div className="grid grid-cols-4 gap-3">{generalComments.photos.map((p,i)=><div key={i} className="aspect-square rounded-xl overflow-hidden border border-gray-200"><img src={p} alt="" className="w-full h-full object-cover" /></div>)}</div>}
@@ -1905,7 +1905,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
 
         {/* Condition Ratings Key */}
         {!isMid && (
-          <div className="px-8 py-8 border-b border-gray-200">
+          <div className="px-8 py-8 border-b border-gray-200 report-section" style={{pageBreakInside:"avoid"}}>
             <div className="text-white font-bold text-sm uppercase tracking-wider px-4 py-2.5 rounded-lg mb-5" style={{ background: BRAND }}>Condition Ratings Key</div>
             <table className="w-full text-sm border-collapse">
               <thead><tr style={{ background:`${BRAND}18` }}><th className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>Rating</th><th className="border border-gray-200 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider" style={{ color:BRAND }}>Description</th></tr></thead>
