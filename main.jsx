@@ -1784,7 +1784,7 @@ function ReportPreview({ inspection, rooms, propInfo, communal, generalComments,
   let refN = 1;
   const sections = [];
   const pi = propInfo.items.filter(hasContent);
-  .length>0) sections.push({ key:"prop", title:"Property Information", items:propInfo.items, notes:propInfo.notes, photos:propInfo.photos });
+    sections.push({ key:"prop", title:"Property Information", items:propInfo.items, notes:propInfo.notes, photos:propInfo.photos });
   rooms.forEach(r => sections.push({ key:r.id, title:r.name, items:r.items, notes:r.notes, photos:r.photos }));
   const ci = communal.items.filter(hasContent);
   if (ci.length>0||communal.notes||(communal.photos||[]).length>0) sections.push({ key:"comm", title:"Communal Areas & Building Exterior", items:communal.items, notes:communal.notes, photos:communal.photos });
